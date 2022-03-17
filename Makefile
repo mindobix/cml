@@ -32,9 +32,13 @@ TESTBINS=$(patsubst $(TEST)/%.$(SRC_EXT), $(TEST)/bin/%, $(TESTS))
 TESTOBJS=$(TESTSRCS:$(TEST)/%.$(SRC_EXT)=$(TEST)/bin/%)
 TESTBIN = $(TEST)/bin
 
+INCLUDE=include
+
 dirs:
 	@echo "Creating directories"
 	@mkdir -p $(dir $(OBJS))
+	@mkdir -p $(INCLUDE)
+	@mkdir -p $(TESTBIN)
 
 debug: CFLAGS=-g -Wall 
 debug: clean
@@ -46,6 +50,9 @@ release: clean
 release: dirs
 release: $(BIN)
 
+
+
+
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
@@ -55,8 +62,14 @@ $(OBJ)/%.o: $(SRC)/%.c
 $(TEST)/bin/%: $(TEST)/%.c
 	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L include/criterion/criterion-2.4.0/lib -I include/criterion/criterion-2.4.0/include -lcriterion
 
-test: clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
+test: dirs clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
 	for test in $(TESTBINS) ; do ./$$test ; done
 
 clean:
 	$(RM) -r $(BINDIR)/* $(OBJ)/* $(TESTBIN)/*
+
+criterion: dirs
+criterion: 
+	curl -sSL https://github.com/mindobix/c-macos-libs/archive/refs/tags/criterion-v2.4.0.zip | tar -xj -C include --strip-components=1
+	cd  $(INCLUDE)/criterion/criterion-2.4.0/lib | ln -s libcriterion.3.dylib libcriterion.dylib
+	mv libcriterion.dylib $(INCLUDE)/criterion/criterion-2.4.0/lib/libcriterion.dylib
