@@ -1,0 +1,1 @@
+int staticCount(int i);

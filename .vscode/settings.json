@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "argparser.h": "c",
+        "static.h": "c",
+        "criterion.h": "c"
+    }
+}
