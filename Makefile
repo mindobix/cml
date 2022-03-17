@@ -56,7 +56,7 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST)/bin/%: $(TEST)/%.c
-	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L/opt/homebrew/Cellar/criterion/2.4.0/lib -I /opt/homebrew/Cellar/criterion/2.4.0/include -lcriterion --coverage
+	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L/opt/homebrew/Cellar/criterion/2.4.0/lib -I /opt/homebrew/Cellar/criterion/2.4.0/include -lcriterion
 
 test: clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
 	for test in $(TESTBINS) ; do ./$$test ; done
