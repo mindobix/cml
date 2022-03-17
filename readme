@@ -1,3 +1,6 @@
+
+brew install 
+
 cml input load -csv '\document\test.csv'  --> /input/test_input.cml
 
 
@@ -45,6 +48,13 @@ gcc -g -Wall cml.c lib/argparser/argparser.c learn/static.c -o cml
 
 c lang
 
+
+
+
+
+
+
+_________________________________________________________________________
 
 // printf() displays the string inside quotation
    // int i = 0;

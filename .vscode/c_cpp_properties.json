@@ -3,9 +3,7 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**",
-                "/opt/homebrew/Cellar/criterion/2.4.0/lib",
-                "/opt/homebrew/Cellar/criterion/2.4.0/include"
+                "${workspaceFolder}/**"
             ],
             "defines": [],
             "macFrameworkPath": [],

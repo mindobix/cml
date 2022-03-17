@@ -46,9 +46,6 @@ release: clean
 release: dirs
 release: $(BIN)
 
-$(TEST)/bin:
-	mkdir $@
-
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
@@ -56,7 +53,7 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST)/bin/%: $(TEST)/%.c
-	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L/opt/homebrew/Cellar/criterion/2.4.0/lib -I /opt/homebrew/Cellar/criterion/2.4.0/include -lcriterion
+	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L include/criterion/criterion-2.4.0/lib -I include/criterion/criterion-2.4.0/include -lcriterion
 
 test: clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
 	for test in $(TESTBINS) ; do ./$$test ; done
