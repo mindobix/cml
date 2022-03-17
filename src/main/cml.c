@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include<math.h>
-#include "lib/argparser/argparser.h"
-#include "learn/static.h"
+#include "../lib/argparser/argparser.h"
+#include "../learn/static.h"
 
 int main(int argc, char** argv) {
    
