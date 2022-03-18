@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g -Wall 
+CFLAGS=-g -Wall
 
 BINDIR=bin
 BIN = $(BINDIR)/main
@@ -23,16 +23,20 @@ ifeq ($(TESTSRCS),)
 	TESTSRCS := $(call rwildcard, $(SRC), *.$(SRC_EXT))
 endif
 
-
 $(info TESTSRCS = $(TESTSRCS))
 
 TEST=tests
-TESTS=$(wildcard $(TEST)/*.c)
-TESTBINS=$(patsubst $(TEST)/%.$(SRC_EXT), $(TEST)/bin/%, $(TESTS))
+TESTSC=$(wildcard $(TEST)/*.c)
+TESTBINS=$(patsubst $(TEST)/%.$(SRC_EXT), $(TEST)/bin/%, $(TESTSC))
 TESTOBJS=$(TESTSRCS:$(TEST)/%.$(SRC_EXT)=$(TEST)/bin/%)
 TESTBIN = $(TEST)/bin
 
 INCLUDES=includes
+
+CRITERION=criterion
+CRITERION_VER=2.4.0
+CRITERION_LIB_DIR=$(INCLUDES)/$(CRITERION)/$(CRITERION)-$(CRITERION_VER)/lib
+CRITERION_INCLUDE_DIR=$(INCLUDES)/$(CRITERION)/$(CRITERION)-$(CRITERION_VER)/include
 
 dirs:
 	@echo "Creating directories"
@@ -50,9 +54,6 @@ release: clean
 release: dirs
 release: $(BIN)
 
-
-
-
 $(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
@@ -60,9 +61,9 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST)/bin/%: $(TEST)/%.c
-	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L$(INCLUDES)/criterion/criterion-2.4.0/lib -I$(INCLUDES)/criterion/criterion-2.4.0/include -lcriterion
+	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L$(CRITERION_LIB_DIR) -I$(CRITERION_INCLUDE_DIR) -l$(CRITERION)
 
-test: dirs clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
+tests: dirs clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
 	for test in $(TESTBINS) ; do ./$$test ; done
 
 clean:
@@ -70,6 +71,8 @@ clean:
 
 includes: dirs
 includes: 
-	curl -sSL https://github.com/mindobix/c-macos-libs/archive/refs/tags/criterion-v2.4.0.zip | tar -xj -C $(INCLUDES) --strip-components=1
-	cd  $(INCLUDES)/criterion/criterion-2.4.0/lib | ln -s libcriterion.3.dylib libcriterion.dylib
-	mv libcriterion.dylib $(INCLUDES)/criterion/criterion-2.4.0/lib/libcriterion.dylib
+	$(RM) -r  $(INCLUDES)/*
+	curl -sSL https://github.com/mindobix/c-macos-libs/archive/refs/tags/$(CRITERION)-v$(CRITERION_VER).zip | tar -xj -C $(INCLUDES) --strip-components=1
+	cd  $(CRITERION_LIB_DIR) | ln -s libcriterion.3.dylib libcriterion.dylib
+	mv libcriterion.dylib $(INCLUDES)/$(CRITERION)/$(CRITERION)-$(CRITERION_VER)/lib/libcriterion.dylib
+	$(RM) -r $(INCLUDES)/README.md
