@@ -32,12 +32,12 @@ TESTBINS=$(patsubst $(TEST)/%.$(SRC_EXT), $(TEST)/bin/%, $(TESTS))
 TESTOBJS=$(TESTSRCS:$(TEST)/%.$(SRC_EXT)=$(TEST)/bin/%)
 TESTBIN = $(TEST)/bin
 
-INCLUDE=include
+INCLUDES=includes
 
 dirs:
 	@echo "Creating directories"
 	@mkdir -p $(dir $(OBJS))
-	@mkdir -p $(INCLUDE)
+	@mkdir -p $(INCLUDES)
 	@mkdir -p $(TESTBIN)
 
 debug: CFLAGS=-g -Wall 
@@ -60,7 +60,7 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TEST)/bin/%: $(TEST)/%.c
-	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L include/criterion/criterion-2.4.0/lib -I include/criterion/criterion-2.4.0/include -lcriterion
+	$(CC) $(CFLAGS) $< $(TESTOBJS) -o $@ -L$(INCLUDES)/criterion/criterion-2.4.0/lib -I$(INCLUDES)/criterion/criterion-2.4.0/include -lcriterion
 
 test: dirs clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
 	for test in $(TESTBINS) ; do ./$$test ; done
@@ -68,8 +68,8 @@ test: dirs clean $(TESTOBJS) $(TEST)/bin $(TESTBINS)
 clean:
 	$(RM) -r $(BINDIR)/* $(OBJ)/* $(TESTBIN)/*
 
-criterion: dirs
-criterion: 
-	curl -sSL https://github.com/mindobix/c-macos-libs/archive/refs/tags/criterion-v2.4.0.zip | tar -xj -C include --strip-components=1
-	cd  $(INCLUDE)/criterion/criterion-2.4.0/lib | ln -s libcriterion.3.dylib libcriterion.dylib
-	mv libcriterion.dylib $(INCLUDE)/criterion/criterion-2.4.0/lib/libcriterion.dylib
+includes: dirs
+includes: 
+	curl -sSL https://github.com/mindobix/c-macos-libs/archive/refs/tags/criterion-v2.4.0.zip | tar -xj -C $(INCLUDES) --strip-components=1
+	cd  $(INCLUDES)/criterion/criterion-2.4.0/lib | ln -s libcriterion.3.dylib libcriterion.dylib
+	mv libcriterion.dylib $(INCLUDES)/criterion/criterion-2.4.0/lib/libcriterion.dylib
